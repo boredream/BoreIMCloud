@@ -14,35 +14,26 @@ import hashlib
 # app = HttpsRedirectMiddleware(app)
 engine = Engine(app)
 
+from rongcloud import RongCloud
+
+rcloud = RongCloud('vnroth0kr97so', '11sOK84w1p')
+
 @engine.on_login
 def login(user):
-    print 'ong login:', user
+    print 'on login:', user
 
-    app_key = "vnroth0kr97so"
-    nonce = str(uuid.uuid1())
-    timestamp = str(int(time.time() * 1000))
-    total_str = app_key + nonce + timestamp
-    signature = hashlib.sha1(total_str).hexdigest()
-
-    headers = {
-        "RC-App-Key": app_key,
-        "RC-Nonce": nonce,
-        "RC-Timestamp": timestamp,
-        "RC-Signature": signature,
-        "Content-Type": "application/json"
-    }
-
-    data = {
-        "userId": user.get("username"),
-        "name": user.get("nickname"),
-        "portraitUri": user.get("avatarUrl")
-    }
-    ry_token_url = "http://api.cn.ronghub.com/user/getToken.json"
-    request = urllib2.Request(ry_token_url, headers=headers, data=data)
-    content = urllib2.urlopen(request).read()
-
-    print str(content)
-
+    # 获取token
+    response = rcloud.User.getToken(
+        userId=user.get("username"),
+        name=user.get("nickname"),
+        portraitUri=user.get("avatarUrl"))
+    if response.ok:
+        token = response.result.get("token")
+        user["token"] = token
+        print "get token success = " + token
+        print 'im login:', user
+    else:
+        raise LeanEngineError('get token error')
 
 
 

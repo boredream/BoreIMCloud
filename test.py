@@ -1,6 +1,5 @@
 # coding: utf-8
 
-import os
 from rongcloud import RongCloud
 
 rcloud = RongCloud('vnroth0kr97so', '11sOK84w1p')
@@ -10,4 +9,5 @@ r = rcloud.User.getToken(
     name='username',
     portraitUri='http://www.rongcloud.cn/images/logo.png')
 
-print r
+if r.ok:
+    print r.result.get("token")
