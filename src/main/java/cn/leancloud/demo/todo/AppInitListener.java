@@ -1,7 +1,6 @@
 package cn.leancloud.demo.todo;
 
 import cn.leancloud.LeanEngine;
-import cn.leancloud.demo.todo.pay.OrderInfo;
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.internal.impl.JavaRequestSignImplementation;
@@ -30,7 +29,6 @@ public class AppInitListener implements ServletContextListener {
         logger.info("LeanEngine app init.");
         // 注册子类化
         AVObject.registerSubclass(Todo.class);
-        AVObject.registerSubclass(OrderInfo.class);
         // 初始化AVOSCloud，请保证在整个项目中间只初始化一次
         LeanEngine.initialize(appId, appKey, appMasterKey);
         // 在请求签名中使用masterKey以激活云代码的最高权限
