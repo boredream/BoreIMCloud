@@ -2,6 +2,7 @@
 
 from leancloud import Engine
 from leancloud import LeanEngineError
+import leancloud
 
 from app import app
 
@@ -28,7 +29,27 @@ def on_login(user):
     else:
         raise LeanEngineError('get token error')
 
+@engine.define
+def imlogin(**params):
+    user = leancloud.User()
+    user.login('Tom', 'cat!@#123')
 
+    print 'login ' + user
+
+    # 获取token
+    response = rcloud.User.getToken(
+        userId=user.get('username'),
+        name=user.get('nickname'),
+        portraitUri=user.get('avatarUrl'))
+    if response.ok:
+        token = response.result.get("token")
+        user.set("token", token)
+        user.save()
+        print "get token success = " + token
+        print 'im login:', user
+        return user
+    else:
+        raise LeanEngineError('get token error')
 
 
 @engine.define
