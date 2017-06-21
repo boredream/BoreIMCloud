@@ -15,20 +15,18 @@ rcloud = RongCloud('vnroth0kr97so', '11sOK84w1p')
 
 @engine.on_login
 def on_login(user):
-    print 'on login:', user.get('username')
-
-    # # 获取token
-    # response = rcloud.User.getToken(
-    #     userId=user.get('username'),
-    #     name=user.get('nickname'),
-    #     portraitUri=user.get('avatarUrl'))
-    # if response.ok:
-    #     token = response.result.get("token")
-    #     user["token"] = token
-    #     print "get token success = " + token
-    #     print 'im login:', user
-    # else:
-    #     raise LeanEngineError('get token error')
+    # 获取token
+    response = rcloud.User.getToken(
+        userId=user.get('username'),
+        name=user.get('nickname'),
+        portraitUri=user.get('avatarUrl'))
+    if response.ok:
+        token = response.result.get("token")
+        user.set("token", token)
+        print "get token success = " + token
+        print 'im login:', user
+    else:
+        raise LeanEngineError('get token error')
 
 
 
