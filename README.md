@@ -1,39 +1,39 @@
-# Java Getting started
+# Flask-getting-started
 
-一个简单的使用 Servlet 的 Java 服务端应用，打成 war 包运行。
-可以运行在 LeanEngine Java 运行时环境。
+一个简单的使用 Flask 的 Python 应用。
+可以运行在 LeanEngine Python 运行时环境。
+
+## 本地运行
+
+首先确认本机已经安装 [Python](http://python.org/) 运行环境。然后执行下列指令：
 
 ## 一键部署
 [![Deploy to LeanEngine](http://ac-32vx10b9.clouddn.com/109bd02ee9f5875a.png)](https://leancloud.cn/1.1/functions/_ops/deploy-button)
 
 ## 本地运行
 
-首先确认本机已经安装 [LeanCloud 命令行工具](https://www.leancloud.cn/docs/leanengine_cli.html)，然后执行下列指令：
+首先确认本机已经安装 [Python](http://python.org/) 运行环境和 [LeanCloud 命令行工具](https://www.leancloud.cn/docs/leanengine_cli.html)，然后执行下列指令：
 
 ```
-$ git clone https://github.com/leancloud/java-war-getting-started.git
-$ cd java-war-getting-started
+$ git clone git@github.com:leancloud/python-getting-started.git
+$ cd python-getting-started
 ```
 
-安装依赖：
+### 安装依赖：
 
 ```
-mvn package
+pip install -r requirements.txt
 ```
 
-登录账户：
+### 关联应用：
+
 ```
-lean login
+lean app add origin <appId>
 ```
 
-关联项目：
-```
-lean checkout
-```
-根据列表提示，输入数字，依次按回车确认，以关联到你的应用。
+这里的 appId 填上你在 LeanCloud 上创建的某一应用的 appId 即可。origin 则有点像 Git 里的 remote 名称。
 
-
-启动项目：
+### 启动项目：
 
 ```
 lean up
@@ -55,8 +55,8 @@ lean publish
 
 ## 相关文档
 
-* [云引擎服务总览](https://leancloud.cn/docs/leanengine_overview.html)
-* [网站托管开发指南](https://leancloud.cn/docs/leanengine_webhosting_guide-java.html)
-* [云函数开发指南](https://leancloud.cn/docs/leanengine_cloudfunction_guide-java.html)
-* [数据存储开发指南](https://leancloud.cn/docs/leanstorage_guide-java.html)
-* [命令行工具使用详解](https://leancloud.cn/docs/leanengine_cli.html)
+* [LeanEngine 指南](https://leancloud.cn/docs/leanengine_guide.html)
+* [Python SDK 指南](https://leancloud.cn/docs/python_guide.html)
+* [Python SDK API](https://leancloud.cn/docs/api/python/index.html)
+* [命令行工具详解](https://leancloud.cn/docs/cloud_code_commandline.html)
+* [LeanEngine FAQ](https://leancloud.cn/docs/cloud_code_faq.html)

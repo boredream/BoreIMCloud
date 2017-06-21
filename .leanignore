@@ -1,4 +1,6 @@
 .git/
 .avoscloud/
 .leancloud/
-target/
+venv
+*.pyc
+__pycache__/
