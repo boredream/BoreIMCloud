@@ -34,8 +34,6 @@ def imlogin(**params):
     user = leancloud.User()
     user.login('Tom', 'cat!@#123')
 
-    print 'login ' + user
-
     # 获取token
     response = rcloud.User.getToken(
         userId=user.get('username'),
@@ -46,7 +44,6 @@ def imlogin(**params):
         user.set("token", token)
         user.save()
         print "get token success = " + token
-        print 'im login:', user
         return user
     else:
         raise LeanEngineError('get token error')
