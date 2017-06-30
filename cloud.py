@@ -33,11 +33,11 @@ def imlogin(**params):
             name = user.get('nickname'),
             portraitUri = user.get('avatarUrl'))
         if response.ok:
-            token = response.result.get("token")
-            user.set("token", token)
+            token = response.result.get("imToken")
+            user.set("imToken", token)
             user.save()
-            print 'im login success'
-            return json.dumps(user._attributes)
+            print 'im login success ', user._attributes
+            return user._attributes
         else:
             print 'im login error : get token error'
             raise LeanEngineError('get token error')
