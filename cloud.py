@@ -2,7 +2,9 @@
 
 from leancloud import Engine
 from leancloud import LeanEngineError
+from leancloud import LeanCloudError
 import leancloud
+import json
 
 from app import app
 
@@ -14,38 +16,31 @@ from rongcloud import RongCloud
 
 rcloud = RongCloud('vnroth0kr97so', '11sOK84w1p')
 
+
 @engine.define
 def imlogin(**params):
     user = leancloud.User()
-    user.login(params.get('username'), params.get('password'))
 
-    # 获取token
-    response = rcloud.User.getToken(
-        userId=user.get('username'),
-        name=user.get('nickname'),
-        portraitUri=user.get('avatarUrl'))
-    if response.ok:
-        token = response.result.get("token")
-        user.set("token", token)
-        user.save()
-        print "get token success = " + token
-        return user
-    else:
-        raise LeanEngineError('get token error')
+    username = params.get('username')
+    password = params.get('password')
 
+    try:
+        user.login(username, password)
 
-@engine.define
-def hello(**params):
-    if 'name' in params:
-        return 'Hello, {}!'.format(params['name'])
-    else:
-        return 'Hello, LeanCloud!'
-
-
-@engine.before_save('Todo')
-def before_todo_save(todo):
-    content = todo.get('content')
-    if not content:
-        raise LeanEngineError('内容不能为空')
-    if len(content) >= 240:
-        todo.set('content', content[:240] + ' ...')
+        # 获取token
+        response = rcloud.User.getToken(
+            userId = user.get('username'),
+            name = user.get('nickname'),
+            portraitUri = user.get('avatarUrl'))
+        if response.ok:
+            token = response.result.get("token")
+            user.set("token", token)
+            user.save()
+            print 'im login success'
+            return json.dumps(user._attributes)
+        else:
+            print 'im login error : get token error'
+            raise LeanEngineError('get token error')
+    except LeanCloudError, e:
+        print 'im login error '
+        raise LeanEngineError(e.code, e.error)
