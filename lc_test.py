@@ -101,9 +101,6 @@ def get_friends():
     except LeanCloudError:
         print 'no friends'
 
-    for user in users:
-        print user
-
     return users
 
 

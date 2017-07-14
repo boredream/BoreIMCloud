@@ -98,21 +98,22 @@ def getFriends():
     query_id = leancloud.Query(query_class='FriendRelation') \
         .or_(query_src, query_tar)
     query = leancloud.Query(query_class='FriendRelation') \
-        .and_(query_id, query_relation)
+        .and_(query_id, query_relation) \
+        .include('srcUser', 'tarUser')
 
-    usres = []
+    users = []
     try:
-        for result in query.include('srcUser', 'tarUser').find():
-            src = result.dump().get('srcUser')
-            tar = result.dump().get('tarUser')
+        for result in query.find():
+            src = result.get('srcUser').dump()
+            tar = result.get('tarUser').dump()
             if src.get('objectId') == srcUserId:
-                usres.append(tar)
+                users.append(tar)
             else:
-                usres.append(src)
+                users.append(src)
     except LeanCloudError:
         print 'no friends'
 
-    return usres
+    return users
 
 
 @engine.define
