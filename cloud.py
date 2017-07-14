@@ -83,36 +83,37 @@ def imlogin(**params):
         raise lee
 
 
-@engine.define
-def getFriends(**params):
-    user = engine.current.user
-    srcUserId = user.get('objectId')
-    srcUser = leancloud.User.create_without_data(srcUserId)
-
-    query_src = leancloud.Query(query_class='FriendRelation') \
-        .equal_to(key='srcUser', value=srcUser)
-    query_tar = leancloud.Query(query_class='FriendRelation') \
-        .equal_to(key='tarUser', value=srcUser)
-    query_relation = leancloud.Query(query_class='FriendRelation') \
-        .equal_to(key='relation', value=1)
-    query_id = leancloud.Query(query_class='FriendRelation') \
-        .or_(query_src, query_tar)
-    query = leancloud.Query(query_class='FriendRelation') \
-        .and_(query_id, query_relation)
-
-    usres = []
-    try:
-        for result in query.find():
-            src = result.dump().get('srcUser')
-            tar = result.dump().get('tarUser')
-            if src.get('objectId') == srcUserId:
-                usres.append(tar)
-            else:
-                usres.append(src)
-    except LeanCloudError:
-        print 'no friends'
-
-    return usres
+# 客户端直接查询关系表
+# @engine.define
+# def getFriends(**params):
+#     user = engine.current.user
+#     srcUserId = user.get('objectId')
+#     srcUser = leancloud.User.create_without_data(srcUserId)
+#
+#     query_src = leancloud.Query(query_class='FriendRelation') \
+#         .equal_to(key='srcUser', value=srcUser)
+#     query_tar = leancloud.Query(query_class='FriendRelation') \
+#         .equal_to(key='tarUser', value=srcUser)
+#     query_relation = leancloud.Query(query_class='FriendRelation') \
+#         .equal_to(key='relation', value=1)
+#     query_id = leancloud.Query(query_class='FriendRelation') \
+#         .or_(query_src, query_tar)
+#     query = leancloud.Query(query_class='FriendRelation') \
+#         .and_(query_id, query_relation)
+#
+#     usres = []
+#     try:
+#         for result in query.find():
+#             src = result.dump().get('srcUser')
+#             tar = result.dump().get('tarUser')
+#             if src.get('objectId') == srcUserId:
+#                 usres.append(tar)
+#             else:
+#                 usres.append(src)
+#     except LeanCloudError:
+#         print 'no friends'
+#
+#     return usres
 
 
 @engine.define
