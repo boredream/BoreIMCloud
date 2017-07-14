@@ -12,7 +12,7 @@ leancloud.init(APP_ID, app_key=APP_KEY, master_key=MASTER_KEY)
 leancloud.use_master_key(True)
 
 srcUserId = '5949e37fda2f6000679a9b74'
-tarUserId = '1'
+tarUserId = '595b3c20ac502e7589ce61dc'
 
 
 def test_friend_request():
@@ -104,8 +104,52 @@ def get_friends():
     return users
 
 
+def get_friend_requests():
+    srcUser = leancloud.User.create_without_data(srcUserId)
+
+    # 两种情况：对方加我了，显示“同意”、同意后显示“已添加”
+    # 注意，发起方不显示好友请求列表，接收方才显示
+    query_tar = leancloud.Query(query_class='FriendRelation') \
+        .equal_to(key='tarUser', value=srcUser)
+    query_request = leancloud.Query(query_class='FriendRelation') \
+        .equal_to(key='relation', value=-1)
+    query = leancloud.Query(query_class='FriendRelation') \
+        .and_(query_tar, query_request) \
+        .include('srcUser')
+
+    users = []
+    try:
+        for result in query.find():
+            tar = result.get('srcUser').dump()
+            users.append(tar)
+    except LeanCloudError:
+        print 'no friend requests'
+
+    return users
+
+
+def apply_friend_request():
+    curUser = leancloud.User.create_without_data(srcUserId)
+    tarUser = leancloud.User.create_without_data(tarUserId)
+
+    # 当前用户是被动方
+    query_src = leancloud.Query(query_class='FriendRelation') \
+        .equal_to(key='srcUser', value=tarUser)
+    query_tar = leancloud.Query(query_class='FriendRelation') \
+        .equal_to(key='tarUser', value=curUser)
+    result = leancloud.Query(query_class='FriendRelation') \
+        .and_(query_src, query_tar).first()
+
+    if result.get('relation') == -1:
+        # 如果已经存在请求，同意为好友
+        result.set('relation', 1)
+        result.save()
+    else:
+        raise LeanEngineError(u'已经是好友了，无需同意添加')
+
+
 if __name__ == '__main__':
-    get_friends()
+    apply_friend_request()
 
 
 
