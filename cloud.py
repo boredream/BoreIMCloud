@@ -84,7 +84,7 @@ def imlogin(**params):
 
 
 @engine.define
-def getFriends(**params):
+def getFriends():
     user = engine.current.user
     srcUserId = user.get('objectId')
     srcUser = leancloud.User.create_without_data(srcUserId)

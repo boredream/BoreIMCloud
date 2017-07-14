@@ -77,30 +77,34 @@ def test_friend_request():
 def get_friends():
     srcUser = leancloud.User.create_without_data(srcUserId)
 
-    query_src = leancloud.Query(query_class='FriendRelation')\
+    query_src = leancloud.Query(query_class='FriendRelation') \
         .equal_to(key='srcUser', value=srcUser)
-    query_tar = leancloud.Query(query_class='FriendRelation')\
+    query_tar = leancloud.Query(query_class='FriendRelation') \
         .equal_to(key='tarUser', value=srcUser)
-    query_relation = leancloud.Query(query_class='FriendRelation')\
+    query_relation = leancloud.Query(query_class='FriendRelation') \
         .equal_to(key='relation', value=1)
-    query_id = leancloud.Query(query_class='FriendRelation')\
+    query_id = leancloud.Query(query_class='FriendRelation') \
         .or_(query_src, query_tar)
     query = leancloud.Query(query_class='FriendRelation') \
-        .and_(query_id, query_relation)
+        .and_(query_id, query_relation)\
+        .include('srcUser', 'tarUser')
 
-    usres = []
+    users = []
     try:
         for result in query.find():
-            src = result.dump().get('srcUser')
-            tar = result.dump().get('tarUser')
+            src = result.get('srcUser').dump()
+            tar = result.get('tarUser').dump()
             if src.get('objectId') == srcUserId:
-                usres.append(tar)
+                users.append(tar)
             else:
-                usres.append(src)
+                users.append(src)
     except LeanCloudError:
         print 'no friends'
 
-    return usres
+    for user in users:
+        print user
+
+    return users
 
 
 if __name__ == '__main__':
