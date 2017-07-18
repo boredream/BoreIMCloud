@@ -206,13 +206,15 @@ def friendRequest(**params):
 
     # 同时向tar发送一条IM系统消息“src申请添加您为好友”
     message = u'申请添加您为好友'
+    # type=1 用户操作, subType=1 添加操作
+    extra = '{"type":1, "subType":1}'
     rcloud.Message.PublishSystem(
         fromUserId=srcUserId,
         toUserId={tarUserId},
         objectName='RC:TxtMsg',
-        content="{\"content\":\""+message+"\",\"extra\":\"helloExtra\"}",
+        content="{\"content\":\""+message+"\",\"extra\":"+extra+"}",
         pushContent='thisisapush',
-        pushData="{\"pushData\":\""+message+"\"}",
+        pushData="{\"pushData\":"+message+"}",
         isPersisted='0',
         isCounted='0')
 
@@ -237,5 +239,6 @@ def apply_friend_request(**params):
         # 如果已经存在请求，同意为好友
         result.set('relation', 1)
         result.save()
+        return tarUser.dump()
     else:
         raise LeanEngineError(u'已经是好友了，无需同意添加')

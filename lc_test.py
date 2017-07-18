@@ -144,12 +144,14 @@ def apply_friend_request():
         # 如果已经存在请求，同意为好友
         result.set('relation', 1)
         result.save()
+        return tarUser
     else:
         raise LeanEngineError(u'已经是好友了，无需同意添加')
 
 
 if __name__ == '__main__':
-    apply_friend_request()
+    for result in get_friends():
+        print result
 
 
 
