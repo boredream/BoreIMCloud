@@ -188,14 +188,14 @@ def friendRequest(**params):
         # 如果src曾经向tar提交过申请，也视为成功申请
         # 但是数据库中不再重复添加好友关系
         print '[src=' + srcUserId + '] has requested friend to [tar=' + tarUserId + '] before'
-        return
+        return tarUser.dump()
 
     if result_rev and result_rev.get('relation') == -1:
         # 如果是tar已经向src提交过申请，则直接relation=1双方改为好友
         result_rev.set('relation', 1)
         result_rev.save()
         print '[tar=' + tarUserId + '] has requested friend to [src=' + srcUserId + '], be friend now'
-        return
+        return tarUser.dump()
 
     # 如果双方没关系，则新建一条src申请加tar为好友的关系数据
     relation = leancloud.Object().create(class_name='FriendRelation')
@@ -217,6 +217,8 @@ def friendRequest(**params):
         pushData="{\"pushData\":"+message+"}",
         isPersisted='0',
         isCounted='0')
+
+    return tarUser.dump()
 
 
 @engine.define
